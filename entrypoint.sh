@@ -4,6 +4,11 @@ if [[ "$DISABLE_SHARE" != "true" ]]; then
   sed -i s%\#SHARE_LOCATION%"location /share/ {\n            proxy_pass http://share:8080;\n            absolute_redirect off;\n        }"%g /etc/nginx/nginx.conf
 fi
 
+if [[ "$DISABLE_APIEXPLORER" != "true" ]]; then
+  sed -i s%\#APIEXPLORER_LOCATION%"location /api-explorer/ {\n            proxy_pass http://alfresco:8080/api-explorer/;\n        }"%g /etc/nginx/nginx.conf
+fi
+
+
 if [[ "$DISABLE_ADW" != "true" ]]; then
   sed -i s%\#ADW_LOCATION%"location /workspace/ {\n            proxy_pass http://digital-workspace:8080/;\n            absolute_redirect off;\n        }"%g /etc/nginx/nginx.conf
 fi
@@ -41,7 +46,7 @@ if [[ $SYNCSERVICE_URL ]]; then
 fi
 
 if [[ $ACCESS_LOG ]]; then
-  sed -i s%\#ENV_ACCESS_LOG%"access_log $ACCESS_LOG;"%g /etc/nginx/nginx.conf
+  sed -i s%\#ENV_ACCESS_LOG%"access_log $ACCESS_LOG;\n            error_log /var/log/nginx/error.log debug;"%g /etc/nginx/nginx.conf
 fi
 
 if [[ $USE_SSL == "true" ]]; then
